@@ -1,0 +1,6 @@
+@vita_care_HostAddress = http://localhost:5198
+
+GET {{vita_care_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
