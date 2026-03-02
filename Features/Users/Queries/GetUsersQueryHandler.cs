@@ -17,7 +17,6 @@ namespace vita_care.Features.Users.Queries
         {
             var (items, totalCount) = await _userRepository.GetPaginatedUsersAsync(
                 request.Search, 
-                request.Role, 
                 request.PageNumber, 
                 request.PageSize, 
                 cancellationToken);

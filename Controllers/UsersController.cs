@@ -27,14 +27,12 @@ namespace vita_care.Controllers
         [ProducesResponseType(typeof(PaginatedResult<UserInformation>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetUsers(
             [FromQuery] string? search,
-            [FromQuery] string? role,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
             var query = new GetUsersQuery
             {
                 Search = search,
-                Role = role,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };

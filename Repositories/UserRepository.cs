@@ -15,7 +15,6 @@ namespace vita_care.Repositories
 
         public async Task<(List<UserInformation> Items, long TotalCount)> GetPaginatedUsersAsync(
             string? search, 
-            string? role, 
             int pageNumber, 
             int pageSize, 
             CancellationToken cancellationToken)
@@ -31,12 +30,6 @@ namespace vita_care.Repositories
                     filterBuilder.Regex(u => u.Name, searchPattern),
                     filterBuilder.Regex(u => u.Email, searchPattern)
                 );
-            }
-
-            // Apply Role filter
-            if (!string.IsNullOrWhiteSpace(role))
-            {
-                filter &= filterBuilder.AnyEq(u => u.Roles, role);
             }
 
             // Get total count
