@@ -16,6 +16,12 @@ var mongoSettings = new MongoDbSettings
 builder.Services.AddSingleton(mongoSettings);
 builder.Services.AddSingleton<IMongoClient>(new MongoClient(mongoSettings.ConnectionString));
 
+// Register MediatR
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+// Register Repositories
+builder.Services.AddScoped<vita_care.Repositories.IUserRepository, vita_care.Repositories.UserRepository>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
