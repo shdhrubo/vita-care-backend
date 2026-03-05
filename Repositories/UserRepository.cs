@@ -43,5 +43,18 @@ namespace vita_care.Repositories
 
             return (items, totalCount);
         }
+
+        public async Task UpsertByUserEmailAsync(UserInformation user, CancellationToken cancellationToken)
+        {
+            var filter = Builders<UserInformation>.Filter.Eq(u => u.Email, user.Email);
+            
+            var update = Builders<UserInformation>.Update
+                .Set(u => u.Name, user.Name)
+                .SetOnInsert(u => u.Id, Guid.NewGuid())
+                .SetOnInsert(u => u.Email, user.Email)
+                .SetOnInsert(u => u.Roles, new List<string> { "patient" });
+
+            await _usersCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken);
+        }
     }
 }

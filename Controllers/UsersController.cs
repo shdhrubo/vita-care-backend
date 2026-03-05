@@ -40,5 +40,16 @@ namespace vita_care.Controllers
             var result = await _mediator.Send(query);
             return Ok(result);
         }
+
+        /// <summary>
+        /// Creates a new user or updates an existing one by email.
+        /// </summary>
+        [HttpPost("upsert")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> UpsertUser([FromBody] vita_care.Features.Users.Commands.UpsertUserCommand command)
+        {
+            await _mediator.Send(command);
+            return NoContent();
+        }
     }
 }

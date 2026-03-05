@@ -6,8 +6,8 @@ namespace vita_care.Models
     public class UserInformation
     {
         [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string? Id { get; set; }
+        [BsonGuidRepresentation(GuidRepresentation.CSharpLegacy)]
+        public Guid Id { get; set; }
 
         public string Email { get; set; } = default!;
 

@@ -22,7 +22,22 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 // Register Repositories
 builder.Services.AddScoped<vita_care.Repositories.IUserRepository, vita_care.Repositories.UserRepository>();
 
-builder.Services.AddControllers();
+// Configure CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("VitaCareCorsPolicy", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = null;
+    });
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -37,6 +52,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("VitaCareCorsPolicy");
 
 app.UseAuthorization();
 
