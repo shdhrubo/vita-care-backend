@@ -21,15 +21,34 @@ namespace vita_care.Features.Doctors.Commands
                 Name = request.Name,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
-                Gender = request.Gender,
+                Gender = new EnumValueView 
+                { 
+                    Value = request.Gender, 
+                    ViewValue = ((GenderType)request.Gender).ToString() 
+                },
                 Specializations = request.Specializations,
                 Department = request.Department,
                 AvailableDays = request.AvailableDays,
-                Slots = request.Slots.Select(s => (SlotType)s).ToList()
+                Slots = request.Slots.Select(s => new EnumValueView 
+                { 
+                    Value = s, 
+                    ViewValue = GetSlotViewValue((SlotType)s) 
+                }).ToList()
             };
 
             await _doctorRepository.CreateDoctorAsync(doctor, cancellationToken);
             return doctor.Id;
+        }
+
+        private string GetSlotViewValue(SlotType type)
+        {
+            return type switch
+            {
+                SlotType.Morning => "10 am to 1 pm",
+                SlotType.Afternoon => "2 pm to 5 pm",
+                SlotType.Evening => "5 pm to 10 pm",
+                _ => type.ToString()
+            };
         }
     }
 }

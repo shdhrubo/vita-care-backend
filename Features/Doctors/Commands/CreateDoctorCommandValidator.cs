@@ -1,5 +1,6 @@
 using FluentValidation;
 using vita_care.Repositories;
+using vita_care.Models;
 
 namespace vita_care.Features.Doctors.Commands
 {
@@ -15,7 +16,7 @@ namespace vita_care.Features.Doctors.Commands
 
             RuleFor(x => x.PhoneNumber).NotEmpty();
             
-            RuleFor(x => x.Gender).IsInEnum();
+            RuleFor(x => x.Gender).Must(val => Enum.IsDefined(typeof(GenderType), val)).WithMessage("Invalid Gender.");
             
             RuleFor(x => x.Specializations).NotEmpty();
             

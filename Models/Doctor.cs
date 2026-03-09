@@ -3,11 +3,17 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace vita_care.Models
 {
-    public enum Gender
+    public class EnumValueView
     {
-        Male,
-        Female,
-        Others
+        public int Value { get; set; }
+        public string ViewValue { get; set; } = default!;
+    }
+
+    public enum GenderType
+    {
+        Male = 1,
+        Female = 2,
+        Others = 3
     }
 
     public enum SlotType
@@ -27,14 +33,13 @@ namespace vita_care.Models
         public string Email { get; set; } = default!;
         public string PhoneNumber { get; set; } = default!;
         
-        [BsonRepresentation(BsonType.String)]
-        public Gender Gender { get; set; }
+        public EnumValueView Gender { get; set; } = default!;
         
         public string Specializations { get; set; } = default!;
         public string Department { get; set; } = default!;
         
         public int[] AvailableDays { get; set; } = new int[7]; // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
         
-        public List<SlotType> Slots { get; set; } = new();
+        public List<EnumValueView> Slots { get; set; } = new();
     }
 }
