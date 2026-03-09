@@ -1,5 +1,7 @@
 using MongoDB.Driver;
 using vita_care.Models;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +23,11 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 // Register Repositories
 builder.Services.AddScoped<vita_care.Repositories.IUserRepository, vita_care.Repositories.UserRepository>();
+builder.Services.AddScoped<vita_care.Repositories.IDoctorRepository, vita_care.Repositories.DoctorRepository>();
+
+// Register FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
 
 // Configure CORS
 builder.Services.AddCors(options =>
