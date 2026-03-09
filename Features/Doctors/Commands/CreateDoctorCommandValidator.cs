@@ -8,6 +8,7 @@ namespace vita_care.Features.Doctors.Commands
     {
         public CreateDoctorCommandValidator()
         {
+            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
             
             RuleFor(x => x.Email)

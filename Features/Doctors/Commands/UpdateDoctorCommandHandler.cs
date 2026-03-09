@@ -4,16 +4,16 @@ using vita_care.Repositories;
 
 namespace vita_care.Features.Doctors.Commands
 {
-    public class CreateDoctorCommandHandler : IRequestHandler<CreateDoctorCommand, Guid>
+    public class UpdateDoctorCommandHandler : IRequestHandler<UpdateDoctorCommand, Unit>
     {
         private readonly IDoctorRepository _doctorRepository;
 
-        public CreateDoctorCommandHandler(IDoctorRepository doctorRepository)
+        public UpdateDoctorCommandHandler(IDoctorRepository doctorRepository)
         {
             _doctorRepository = doctorRepository;
         }
 
-        public async Task<Guid> Handle(CreateDoctorCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateDoctorCommand request, CancellationToken cancellationToken)
         {
             var doctor = new Doctor
             {
@@ -36,8 +36,8 @@ namespace vita_care.Features.Doctors.Commands
                 }).ToList()
             };
 
-            await _doctorRepository.CreateDoctorAsync(doctor, cancellationToken);
-            return doctor.Id;
+            await _doctorRepository.UpdateDoctorAsync(doctor, cancellationToken);
+            return Unit.Value;
         }
 
         private string GetSlotViewValue(SlotType type)

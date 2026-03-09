@@ -3,7 +3,7 @@ using vita_care.Models;
 
 namespace vita_care.Features.Doctors.Commands
 {
-    public class CreateDoctorCommand : IRequest<Guid>
+    public class UpdateDoctorCommand : IRequest<Unit>
     {
         public Guid Id { get; set; }
         public string Name { get; set; } = default!;
@@ -13,6 +13,6 @@ namespace vita_care.Features.Doctors.Commands
         public string Specializations { get; set; } = default!;
         public string Department { get; set; } = default!;
         public int[] AvailableDays { get; set; } = default!;
-        public List<int> Slots { get; set; } = default!; // Input as list of numbers (1, 2, 3)
+        public List<int> Slots { get; set; } = default!;
     }
 }
