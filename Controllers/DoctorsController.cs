@@ -35,6 +35,21 @@ namespace vita_care.Controllers
             return Ok(result);
         }
 
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(Doctor), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetDoctorById(Guid id)
+        {
+            var doctor = await _mediator.Send(new GetDoctorByIdQuery { Id = id });
+            
+            if (doctor == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(doctor);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorCommand command)
         {

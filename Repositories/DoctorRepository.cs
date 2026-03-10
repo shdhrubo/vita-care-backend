@@ -47,6 +47,11 @@ namespace vita_care.Repositories
             return (items, totalCount);
         }
 
+        public async Task<Doctor?> GetDoctorByIdAsync(Guid id, CancellationToken cancellationToken)
+        {
+            return await _doctorsCollection.Find(d => d.Id == id).FirstOrDefaultAsync(cancellationToken);
+        }
+
         public async Task UpdateDoctorAsync(Doctor doctor, CancellationToken cancellationToken)
         {
             await _doctorsCollection.ReplaceOneAsync(d => d.Id == doctor.Id, doctor, cancellationToken: cancellationToken);
