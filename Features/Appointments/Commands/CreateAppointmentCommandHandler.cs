@@ -17,7 +17,7 @@ namespace vita_care.Features.Appointments.Commands
         {
             var appointment = new Appointment
             {
-                Id = request.Id,
+                Id = Guid.NewGuid(),
                 DoctorInfo = new DoctorInfo
                 {
                     DoctorId = request.DoctorInfo.DoctorId,

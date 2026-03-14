@@ -7,7 +7,6 @@ namespace vita_care.Features.Appointments.Commands
     {
         public CreateAppointmentCommandValidator()
         {
-            RuleFor(x => x.Id).NotEmpty();
             RuleFor(x => x.CreatorEmail).NotEmpty().EmailAddress();
             RuleFor(x => x.CreatorName).NotEmpty();
             RuleFor(x => x.CreatorPhone).NotEmpty();

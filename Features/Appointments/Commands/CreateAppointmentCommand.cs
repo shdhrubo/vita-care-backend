@@ -13,7 +13,6 @@ namespace vita_care.Features.Appointments.Commands
 
     public class CreateAppointmentCommand : IRequest<Guid>
     {
-        public Guid Id { get; set; }
         public DoctorInfoInput DoctorInfo { get; set; } = default!;
         public string CreatorEmail { get; set; } = default!;
         public string CreatorName { get; set; } = default!;

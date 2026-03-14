@@ -17,7 +17,7 @@ namespace vita_care.Features.Doctors.Commands
         {
             var doctor = new Doctor
             {
-                Id = request.Id,
+                Id = Guid.NewGuid(),
                 Name = request.Name,
                 Email = request.Email,
                 PhoneNumber = request.PhoneNumber,
