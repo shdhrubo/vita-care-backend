@@ -24,6 +24,7 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 // Register Repositories
 builder.Services.AddScoped<vita_care.Repositories.IUserRepository, vita_care.Repositories.UserRepository>();
 builder.Services.AddScoped<vita_care.Repositories.IDoctorRepository, vita_care.Repositories.DoctorRepository>();
+builder.Services.AddScoped<vita_care.Repositories.IAppointmentRepository, vita_care.Repositories.AppointmentRepository>();
 
 // Register FluentValidation
 builder.Services.AddFluentValidationAutoValidation();
