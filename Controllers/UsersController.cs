@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using vita_care.Features.Users.Commands;
 using vita_care.Features.Users.Queries;
 using vita_care.Models;
 
@@ -37,11 +38,11 @@ namespace vita_care.Controllers
 
         
         [HttpPost("upsert")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> UpsertUser([FromBody] vita_care.Features.Users.Commands.UpsertUserCommand command)
+        [ProducesResponseType(typeof(vita_care.Features.Users.Commands.UpsertUserResponse), StatusCodes.Status200OK)]
+        public async Task<IActionResult> UpsertUser([FromBody] UpsertUserCommand command)
         {
-            await _mediator.Send(command);
-            return NoContent();
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
     }
 }

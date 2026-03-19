@@ -44,7 +44,7 @@ namespace vita_care.Repositories
             return (items, totalCount);
         }
 
-        public async Task UpsertByUserEmailAsync(UserInformation user, CancellationToken cancellationToken)
+        public async Task<UserInformation> UpsertByUserEmailAsync(UserInformation user, CancellationToken cancellationToken)
         {
             var filter = Builders<UserInformation>.Filter.Eq(u => u.Email, user.Email);
             
@@ -54,7 +54,13 @@ namespace vita_care.Repositories
                 .SetOnInsert(u => u.Email, user.Email)
                 .SetOnInsert(u => u.Roles, new List<string> { "patient" });
 
-            await _usersCollection.UpdateOneAsync(filter, update, new UpdateOptions { IsUpsert = true }, cancellationToken);
+            var options = new FindOneAndUpdateOptions<UserInformation>
+            {
+                IsUpsert = true,
+                ReturnDocument = ReturnDocument.After
+            };
+
+            return await _usersCollection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
         }
     }
 }

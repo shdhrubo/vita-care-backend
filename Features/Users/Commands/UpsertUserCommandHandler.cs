@@ -4,7 +4,7 @@ using vita_care.Repositories;
 
 namespace vita_care.Features.Users.Commands
 {
-    public class UpsertUserCommandHandler : IRequestHandler<UpsertUserCommand, Unit>
+    public class UpsertUserCommandHandler : IRequestHandler<UpsertUserCommand, UpsertUserResponse>
     {
         private readonly IUserRepository _userRepository;
 
@@ -13,7 +13,7 @@ namespace vita_care.Features.Users.Commands
             _userRepository = userRepository;
         }
 
-        public async Task<Unit> Handle(UpsertUserCommand request, CancellationToken cancellationToken)
+        public async Task<UpsertUserResponse> Handle(UpsertUserCommand request, CancellationToken cancellationToken)
         {
             var user = new UserInformation
             {
@@ -21,9 +21,14 @@ namespace vita_care.Features.Users.Commands
                 Name = request.Name
             };
 
-            await _userRepository.UpsertByUserEmailAsync(user, cancellationToken);
+            var result = await _userRepository.UpsertByUserEmailAsync(user, cancellationToken);
             
-            return Unit.Value;
+            return new UpsertUserResponse
+            {
+                Email = result.Email,
+                Name = result.Name,
+                Roles = result.Roles
+            };
         }
     }
 }
