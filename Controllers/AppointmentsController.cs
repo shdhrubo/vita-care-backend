@@ -19,14 +19,34 @@ namespace vita_care.Controllers
 
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedResult<Appointment>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetAppointmentsByCreatorEmail(
-            [FromQuery] string creatorEmail,
+        public async Task<IActionResult> GetAppointments(
+            [FromQuery] string? search,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {
-            var query = new GetAppointmentsByCreatorEmailQuery
+            var query = new GetAppointmentsQuery
             {
-                CreatorEmail = creatorEmail,
+                Search = search,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
+
+            var result = await _mediator.Send(query);
+            return Ok(result);
+        }
+
+        [HttpGet("by-email")]
+        [ProducesResponseType(typeof(PaginatedResult<Appointment>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAppointmentsByEmail(
+            [FromQuery] string email,
+            [FromQuery] string? search,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            var query = new GetAppointmentsByEmailQuery
+            {
+                Email = email,
+                Search = search,
                 PageNumber = pageNumber,
                 PageSize = pageSize
             };

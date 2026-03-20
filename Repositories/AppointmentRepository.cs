@@ -29,9 +29,55 @@ namespace vita_care.Repositories
             return result.DeletedCount > 0;
         }
 
-        public async Task<(List<Appointment> Items, long TotalCount)> GetPaginatedByCreatorEmailAsync(string creatorEmail, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        public async Task<(List<Appointment> Items, long TotalCount)> GetPaginatedAppointmentsAsync(string? search, int pageNumber, int pageSize, CancellationToken cancellationToken)
         {
-            var filter = Builders<Appointment>.Filter.Eq(a => a.CreatorEmail, creatorEmail);
+            var filterBuilder = Builders<Appointment>.Filter;
+            var filter = filterBuilder.Empty;
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchPattern = new MongoDB.Bson.BsonRegularExpression(search, "i");
+                filter &= filterBuilder.Or(
+                    filterBuilder.Regex(a => a.DoctorInfo.DoctorName, searchPattern),
+                    filterBuilder.Regex(a => a.DoctorInfo.Department, searchPattern),
+                    filterBuilder.Regex(a => a.DoctorInfo.Specializations, searchPattern),
+                    filterBuilder.Regex(a => a.CreatorName, searchPattern)
+                );
+            }
+
+            var totalCount = await _appointmentsCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
+
+            var items = await _appointmentsCollection.Find(filter)
+                .Skip((pageNumber - 1) * pageSize)
+                .Limit(pageSize)
+                .ToListAsync(cancellationToken);
+
+            return (items, totalCount);
+        }
+
+        public async Task<(List<Appointment> Items, long TotalCount)> GetPaginatedByEmailAsync(string email, string? search, int pageNumber, int pageSize, CancellationToken cancellationToken)
+        {
+            var filterBuilder = Builders<Appointment>.Filter;
+            
+            // Search either the CreatorEmail or the DoctorEmail
+            var emailFilter = filterBuilder.Or(
+                filterBuilder.Eq(a => a.CreatorEmail, email),
+                filterBuilder.Eq(a => a.DoctorInfo.DoctorEmail, email)
+            );
+
+            var filter = emailFilter;
+
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                var searchPattern = new MongoDB.Bson.BsonRegularExpression(search, "i");
+                var searchFilter = filterBuilder.Or(
+                    filterBuilder.Regex(a => a.DoctorInfo.DoctorName, searchPattern),
+                    filterBuilder.Regex(a => a.DoctorInfo.Department, searchPattern),
+                    filterBuilder.Regex(a => a.DoctorInfo.Specializations, searchPattern),
+                    filterBuilder.Regex(a => a.CreatorName, searchPattern)
+                );
+                filter &= searchFilter;
+            }
 
             var totalCount = await _appointmentsCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 

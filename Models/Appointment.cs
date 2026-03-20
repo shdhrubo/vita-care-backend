@@ -19,6 +19,7 @@ namespace vita_care.Models
         public string DoctorName { get; set; } = default!;
         public string DoctorEmail { get; set; } = default!;
         public string Department { get; set; } = default!;
+        public string Specializations { get; set; } = default!;
         public EnumValueView Gender { get; set; } = default!;
     }
 

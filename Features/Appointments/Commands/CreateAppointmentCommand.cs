@@ -8,6 +8,7 @@ namespace vita_care.Features.Appointments.Commands
         public string DoctorName { get; set; } = default!;
         public string DoctorEmail { get; set; } = default!;
         public string Department { get; set; } = default!;
+        public string Specializations { get; set; } = default!;
         public int Gender { get; set; }
     }
 

@@ -19,6 +19,7 @@ namespace vita_care.Features.Appointments.Commands
                 RuleFor(x => x.DoctorInfo.DoctorName).NotEmpty();
                 RuleFor(x => x.DoctorInfo.DoctorEmail).NotEmpty().EmailAddress();
                 RuleFor(x => x.DoctorInfo.Department).NotEmpty();
+                RuleFor(x => x.DoctorInfo.Specializations).NotEmpty();
                 RuleFor(x => x.DoctorInfo.Gender).Must(val => Enum.IsDefined(typeof(GenderType), val)).WithMessage("Invalid Gender.");
             });
         }
@@ -41,6 +42,7 @@ namespace vita_care.Features.Appointments.Commands
                 RuleFor(x => x.DoctorInfo.DoctorName).NotEmpty();
                 RuleFor(x => x.DoctorInfo.DoctorEmail).NotEmpty().EmailAddress();
                 RuleFor(x => x.DoctorInfo.Department).NotEmpty();
+                RuleFor(x => x.DoctorInfo.Specializations).NotEmpty();
                 RuleFor(x => x.DoctorInfo.Gender).Must(val => Enum.IsDefined(typeof(GenderType), val)).WithMessage("Invalid Gender.");
             });
         }

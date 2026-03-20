@@ -27,6 +27,7 @@ namespace vita_care.Features.Appointments.Commands
                 DoctorName = request.DoctorInfo.DoctorName,
                 DoctorEmail = request.DoctorInfo.DoctorEmail,
                 Department = request.DoctorInfo.Department,
+                Specializations = request.DoctorInfo.Specializations,
                 Gender = new EnumValueView
                 {
                     Value = request.DoctorInfo.Gender,
