@@ -18,10 +18,23 @@ namespace vita_care.Features.Appointments.Commands
             var statusView = new EnumValueView
             {
                 Value = request.Status,
-                ViewValue = ((AppointmentStatus)request.Status).ToString()
+                ViewValue = GetStatusViewValue((AppointmentStatus)request.Status)
             };
             
             return await _appointmentRepository.ChangeStatusAsync(request.Id, statusView, cancellationToken);
+        }
+
+        private string GetStatusViewValue(AppointmentStatus status)
+        {
+            return status switch
+            {
+                AppointmentStatus.Requested   => "Requested",
+                AppointmentStatus.Approved    => "Approved",
+                AppointmentStatus.Canceled    => "Canceled",
+                AppointmentStatus.Visited     => "Visited",
+                AppointmentStatus.NotVisited  => "Not Visited",
+                _ => status.ToString()
+            };
         }
     }
 }

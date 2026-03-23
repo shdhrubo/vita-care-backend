@@ -43,7 +43,7 @@ namespace vita_care.Features.Appointments.Commands
                 Status = new EnumValueView
                 {
                     Value = (int)AppointmentStatus.Requested,
-                    ViewValue = AppointmentStatus.Requested.ToString()
+                    ViewValue = "Requested"
                 }
             };
 
@@ -59,6 +59,19 @@ namespace vita_care.Features.Appointments.Commands
                 SlotType.Afternoon => "2 pm to 5 pm",
                 SlotType.Evening => "5 pm to 10 pm",
                 _ => type.ToString()
+            };
+        }
+
+        private string GetStatusViewValue(AppointmentStatus status)
+        {
+            return status switch
+            {
+                AppointmentStatus.Requested  => "Requested",
+                AppointmentStatus.Approved   => "Approved",
+                AppointmentStatus.Canceled   => "Canceled",
+                AppointmentStatus.Visited    => "Visited",
+                AppointmentStatus.NotVisited => "Not Visited",
+                _ => status.ToString()
             };
         }
     }
