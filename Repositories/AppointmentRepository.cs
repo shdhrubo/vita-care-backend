@@ -48,6 +48,7 @@ namespace vita_care.Repositories
             var totalCount = await _appointmentsCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
             var items = await _appointmentsCollection.Find(filter)
+                .SortByDescending(a => a.Date)
                 .Skip((pageNumber - 1) * pageSize)
                 .Limit(pageSize)
                 .ToListAsync(cancellationToken);
@@ -82,6 +83,7 @@ namespace vita_care.Repositories
             var totalCount = await _appointmentsCollection.CountDocumentsAsync(filter, cancellationToken: cancellationToken);
 
             var items = await _appointmentsCollection.Find(filter)
+                .SortByDescending(a => a.Date)
                 .Skip((pageNumber - 1) * pageSize)
                 .Limit(pageSize)
                 .ToListAsync(cancellationToken);
