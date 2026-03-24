@@ -1,5 +1,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using vita_care.Features.Appointments.Commands;
 using vita_care.Features.Appointments.Queries;
 using vita_care.Models;
@@ -7,6 +8,7 @@ using vita_care.Models;
 namespace vita_care.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class AppointmentsController : ControllerBase
     {
