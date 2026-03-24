@@ -62,5 +62,30 @@ namespace vita_care.Repositories
 
             return await _usersCollection.FindOneAndUpdateAsync(filter, update, options, cancellationToken);
         }
+
+        public async Task<UserInformation?> UpdateUserRolesAsync(string email, List<string> addedRoles, List<string> removedRoles, CancellationToken cancellationToken)
+        {
+            var filter = Builders<UserInformation>.Filter.Eq(u => u.Email, email);
+
+            var updateDefinitions = new List<UpdateDefinition<UserInformation>>();
+
+            if (addedRoles.Count > 0)
+                updateDefinitions.Add(Builders<UserInformation>.Update.AddToSetEach(u => u.Roles, addedRoles));
+
+            if (removedRoles.Count > 0)
+                updateDefinitions.Add(Builders<UserInformation>.Update.PullAll(u => u.Roles, removedRoles));
+
+            if (updateDefinitions.Count == 0)
+                return await _usersCollection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+
+            var combinedUpdate = Builders<UserInformation>.Update.Combine(updateDefinitions);
+
+            var options = new FindOneAndUpdateOptions<UserInformation>
+            {
+                ReturnDocument = ReturnDocument.After
+            };
+
+            return await _usersCollection.FindOneAndUpdateAsync(filter, combinedUpdate, options, cancellationToken);
+        }
     }
 }

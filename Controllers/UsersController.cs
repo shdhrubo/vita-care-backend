@@ -36,12 +36,22 @@ namespace vita_care.Controllers
             return Ok(result);
         }
 
-        
+
         [HttpPost("upsert")]
-        [ProducesResponseType(typeof(vita_care.Features.Users.Commands.UpsertUserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(UpsertUserResponse), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpsertUser([FromBody] UpsertUserCommand command)
         {
             var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
+        [HttpPatch("roles")]
+        [ProducesResponseType(typeof(UpsertUserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> UpdateUserRoles([FromBody] UpdateUserRolesCommand command)
+        {
+            var result = await _mediator.Send(command);
+            if (result == null) return NotFound(new { Message = $"User with email '{command.Email}' not found." });
             return Ok(result);
         }
     }
