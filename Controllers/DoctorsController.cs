@@ -20,6 +20,7 @@ namespace vita_care.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(PaginatedResult<Doctor>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetDoctors(
             [FromQuery] string? search,
