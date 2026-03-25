@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authorization;
 using vita_care.Features.Doctors.Commands;
 using vita_care.Features.Doctors.Queries;
 using vita_care.Models;
+using vita_care.Services;
 
 namespace vita_care.Controllers
 {
@@ -13,10 +14,12 @@ namespace vita_care.Controllers
     public class DoctorsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IAuthService _authService;
 
-        public DoctorsController(IMediator mediator)
+        public DoctorsController(IMediator mediator, IAuthService authService)
         {
             _mediator = mediator;
+            _authService = authService;
         }
 
         [HttpGet]
@@ -41,8 +44,13 @@ namespace vita_care.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(Doctor), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> GetDoctorById(Guid id)
         {
+            if (!await _authService.HasRoleAsync(User, ["patient","receptionist","admin"]))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { Message = "only logged in user can get access." });
+            }
             var doctor = await _mediator.Send(new GetDoctorByIdQuery { Id = id });
             
             if (doctor == null)
@@ -54,18 +62,32 @@ namespace vita_care.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> CreateDoctor([FromBody] CreateDoctorCommand command)
         {
+            if (!await _authService.HasRoleAsync(User, ["admin"]))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { Message = "Only admins can add new doctors." });
+            }
+
             var doctorId = await _mediator.Send(command);
             return CreatedAtAction(nameof(CreateDoctor), new { id = doctorId }, doctorId);
         }
 
         [HttpPut]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
         public async Task<IActionResult> UpdateDoctor([FromBody] UpdateDoctorCommand command)
         {
+            if (!await _authService.HasRoleAsync(User, ["admin"]))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { Message = "Only admins can update doctor information." });
+            }
+
             await _mediator.Send(command);
             return NoContent();
         }
+
     }
 }

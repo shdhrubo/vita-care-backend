@@ -87,5 +87,11 @@ namespace vita_care.Repositories
 
             return await _usersCollection.FindOneAndUpdateAsync(filter, combinedUpdate, options, cancellationToken);
         }
+
+        public async Task<UserInformation?> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            var filter = Builders<UserInformation>.Filter.Eq(u => u.Email, email);
+            return await _usersCollection.Find(filter).FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

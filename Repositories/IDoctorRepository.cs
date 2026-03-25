@@ -8,5 +8,6 @@ namespace vita_care.Repositories
         Task<(List<Doctor> Items, long TotalCount)> GetPaginatedDoctorsAsync(string? search, int pageNumber, int pageSize, CancellationToken cancellationToken);
         Task<Doctor?> GetDoctorByIdAsync(Guid id, CancellationToken cancellationToken);
         Task UpdateDoctorAsync(Doctor doctor, CancellationToken cancellationToken);
+        Task<bool> DeleteDoctorAsync(Guid id, CancellationToken cancellationToken);
     }
 }

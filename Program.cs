@@ -25,6 +25,9 @@ builder.Services.AddScoped<vita_care.Repositories.IUserRepository, vita_care.Rep
 builder.Services.AddScoped<vita_care.Repositories.IDoctorRepository, vita_care.Repositories.DoctorRepository>();
 builder.Services.AddScoped<vita_care.Repositories.IAppointmentRepository, vita_care.Repositories.AppointmentRepository>();
 
+// Register Services
+builder.Services.AddScoped<vita_care.Services.IAuthService, vita_care.Services.AuthService>();
+
 // Configure Authentication
 var auth0Domain = $"https://{Environment.GetEnvironmentVariable("AUTH0_DOMAIN")}/";
 var auth0Audience = Environment.GetEnvironmentVariable("AUTH0_AUDIENCE");
