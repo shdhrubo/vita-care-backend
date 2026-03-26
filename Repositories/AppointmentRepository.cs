@@ -102,5 +102,58 @@ namespace vita_care.Repositories
         {
             return await _appointmentsCollection.Find(a => a.Id == id).FirstOrDefaultAsync(cancellationToken);
         }
+
+        public async Task<AppointmentStats> GetStatsByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            var filterBuilder = Builders<Appointment>.Filter;
+            var baseFilter = filterBuilder.Or(
+                filterBuilder.Eq(a => a.CreatorEmail, email),
+                filterBuilder.Eq(a => a.DoctorInfo.DoctorEmail, email)
+            );
+
+            var totalTask = _appointmentsCollection.CountDocumentsAsync(baseFilter, cancellationToken: cancellationToken);
+            var requestedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Requested), cancellationToken: cancellationToken);
+            var approvedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Approved), cancellationToken: cancellationToken);
+            var canceledTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Canceled), cancellationToken: cancellationToken);
+            var visitedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Visited), cancellationToken: cancellationToken);
+            var notVisitedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.NotVisited), cancellationToken: cancellationToken);
+
+            await Task.WhenAll(totalTask, requestedTask, approvedTask, canceledTask, visitedTask, notVisitedTask);
+
+            return new AppointmentStats
+            {
+                Total = await totalTask,
+                Requested = await requestedTask,
+                Approved = await approvedTask,
+                Canceled = await canceledTask,
+                Visited = await visitedTask,
+                NotVisited = await notVisitedTask
+            };
+        }
+
+        public async Task<AppointmentStats> GetAllStatsAsync(CancellationToken cancellationToken)
+        {
+            var filterBuilder = Builders<Appointment>.Filter;
+            var baseFilter = filterBuilder.Empty;
+
+            var totalTask = _appointmentsCollection.CountDocumentsAsync(baseFilter, cancellationToken: cancellationToken);
+            var requestedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Requested), cancellationToken: cancellationToken);
+            var approvedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Approved), cancellationToken: cancellationToken);
+            var canceledTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Canceled), cancellationToken: cancellationToken);
+            var visitedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.Visited), cancellationToken: cancellationToken);
+            var notVisitedTask = _appointmentsCollection.CountDocumentsAsync(baseFilter & filterBuilder.Eq(a => a.Status.Value, (int)AppointmentStatus.NotVisited), cancellationToken: cancellationToken);
+
+            await Task.WhenAll(totalTask, requestedTask, approvedTask, canceledTask, visitedTask, notVisitedTask);
+
+            return new AppointmentStats
+            {
+                Total = await totalTask,
+                Requested = await requestedTask,
+                Approved = await approvedTask,
+                Canceled = await canceledTask,
+                Visited = await visitedTask,
+                NotVisited = await notVisitedTask
+            };
+        }
     }
 }

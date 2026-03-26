@@ -52,6 +52,30 @@ namespace vita_care.Controllers
             return Ok(result);
         }
 
+        [HttpGet("stats")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AppointmentStats), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAppointmentStats([FromQuery] string email)
+        {
+            var result = await _mediator.Send(new GetAppointmentStatsQuery { Email = email });
+            return Ok(result);
+        }
+
+        [HttpGet("stats/all")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AppointmentStats), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        public async Task<IActionResult> GetAllAppointmentStats()
+        {
+            if (!await _authService.HasRoleAsync(User, ["receptionist", "admin"]))
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new { Message = "Only staff can access global statistics." });
+            }
+
+            var result = await _mediator.Send(new GetAllAppointmentStatsQuery());
+            return Ok(result);
+        }
+
         [HttpGet("by-email")]
         [ProducesResponseType(typeof(PaginatedResult<Appointment>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]

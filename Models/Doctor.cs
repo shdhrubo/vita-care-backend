@@ -41,5 +41,7 @@ namespace vita_care.Models
         public int[] AvailableDays { get; set; } = new int[7]; // [Sun, Mon, Tue, Wed, Thu, Fri, Sat]
         
         public List<EnumValueView> Slots { get; set; } = new();
+        
+        public decimal Fee { get; set; }
     }
 }

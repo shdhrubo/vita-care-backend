@@ -33,7 +33,8 @@ namespace vita_care.Features.Doctors.Commands
                 { 
                     Value = s, 
                     ViewValue = GetSlotViewValue((SlotType)s) 
-                }).ToList()
+                }).ToList(),
+                Fee = request.Fee
             };
 
             await _doctorRepository.CreateDoctorAsync(doctor, cancellationToken);
